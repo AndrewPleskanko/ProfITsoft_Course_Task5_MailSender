@@ -24,7 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.profitsoft.mailsender.MailSenderApplication;
 import com.profitsoft.mailsender.entity.EmailMessage;
-import com.profitsoft.mailsender.enums.MessageStatus;
+import com.profitsoft.mailsender.enums.MessageSendingStatus;
 import com.profitsoft.mailsender.repository.EmailMessageRepository;
 
 @SpringBootTest
@@ -74,7 +74,7 @@ class EmailServiceIntegrationTest {
         // then
         verify(mailSender).send(any(SimpleMailMessage.class));
         List<EmailMessage> savedMessages = emailMessageRepository.findByRecipientEmail("test@example.com");
-        assertEquals(MessageStatus.SENT, savedMessages.get(0).getStatus());
+        assertEquals(MessageSendingStatus.SENT, savedMessages.get(0).getStatus());
         Assertions.assertFalse(savedMessages.isEmpty(), "No EmailMessage found with the given recipient email");
     }
 
@@ -93,6 +93,6 @@ class EmailServiceIntegrationTest {
 
         // then
         verify(mailSender).send(any(SimpleMailMessage.class));
-        assertEquals(MessageStatus.ERROR, emailMessage.getStatus());
+        assertEquals(MessageSendingStatus.ERROR, emailMessage.getStatus());
     }
 }

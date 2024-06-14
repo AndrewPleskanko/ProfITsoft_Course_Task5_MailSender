@@ -1,5 +1,5 @@
 package com.profitsoft.mailsender.enums;
 
-public enum MessageStatus {
+public enum MessageSendingStatus {
     SENT, ERROR
 }

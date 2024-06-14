@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import com.profitsoft.mailsender.enums.MessageStatus;
+import com.profitsoft.mailsender.enums.MessageSendingStatus;
 import lombok.Data;
 
 @Data
@@ -27,7 +27,7 @@ public class EmailMessage {
     private String recipientEmail;
 
     @Field(type = FieldType.Keyword)
-    private MessageStatus status;
+    private MessageSendingStatus status;
 
     @Field(type = FieldType.Date)
     private LocalDate lastAttemptTime;

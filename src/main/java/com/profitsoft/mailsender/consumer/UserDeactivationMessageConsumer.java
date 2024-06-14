@@ -4,7 +4,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.profitsoft.mailsender.entity.EmailMessage;
-import com.profitsoft.mailsender.enums.MessageStatus;
 import com.profitsoft.mailsender.services.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserDeactivationMessageConsumer implements MessageConsumer {
+public class UserDeactivationMessageConsumer implements MessageConsumer<EmailMessage> {
 
     private final EmailServiceImpl emailService;
 
@@ -27,13 +26,8 @@ public class UserDeactivationMessageConsumer implements MessageConsumer {
     @Override
     @KafkaListener(topics = "user-deactivation", groupId = "group_id")
     public void consume(EmailMessage emailMessage) {
-        try {
-            emailService.sendEmail(emailMessage);
-            emailMessage.setStatus(MessageStatus.SENT);
-            log.info("Email sent: {}", emailMessage);
-        } catch (Exception e) {
-            emailMessage.setStatus(MessageStatus.ERROR);
-            log.error("Error sending email: {}", emailMessage, e);
-        }
+        log.info("Received a message from Kafka: {}", emailMessage);
+        emailService.sendEmail(emailMessage);
+        log.debug("Email sent: {}", emailMessage);
     }
 }
