@@ -139,8 +139,8 @@
                         <exclude>com/profitsoft/mailsender/entity/**</exclude>
                         <exclude>com/profitsoft/mailsender/enums/**</exclude>
                         <exclude>com/profitsoft/mailsender/consumer/**</exclude>
+                        <exclude>com/profitsoft/mailsender/job/**</exclude>
                         <exclude>com/profitsoft/mailsender/config/**</exclude>
-                        <exclude>com/profitsoft/mailsender/services/FailedEmailResenderImpl.class</exclude>
                         <exclude>com/profitsoft/mailsender/MailSenderApplication.class</exclude>
                         <includeNoLocationClasses>true</includeNoLocationClasses>
                     </excludes>

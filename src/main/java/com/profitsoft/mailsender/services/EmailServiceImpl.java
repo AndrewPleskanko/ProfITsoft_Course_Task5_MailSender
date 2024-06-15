@@ -73,7 +73,7 @@ public class EmailServiceImpl implements EmailService {
         log.info("Starting to resend failed emails");
         List<EmailMessage> failedEmails = emailMessageRepository.findByStatus(MessageSendingStatus.ERROR);
         for (EmailMessage failedEmail : failedEmails) {
-            if (failedEmail.getAttemptCount() >= maxResendAttempts) {
+            if (failedEmail.getAttemptCount() > maxResendAttempts) {
                 log.info("Skipping resend for email to: {}. Max resend attempts reached.",
                         failedEmail.getRecipientEmail());
                 emailMessageRepository.delete(failedEmail);

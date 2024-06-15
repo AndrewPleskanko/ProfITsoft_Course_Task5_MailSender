@@ -1,12 +1,14 @@
 package com.profitsoft.mailsender.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -59,7 +61,7 @@ class EmailServiceIntegrationTest {
     private JavaMailSender mailSender;
 
     @Test
-    public void testSendEmailSuccess() {
+    public void sendEmail_withValidEmail_sendsEmailSuccessfully() {
         // given
         EmailMessage emailMessage = new EmailMessage();
         emailMessage.setRecipientEmail("test@example.com");
@@ -79,7 +81,7 @@ class EmailServiceIntegrationTest {
     }
 
     @Test
-    public void testSendEmailFailure() {
+    public void sendEmail_withInvalidEmail_setsStatusToError() {
         // given
         EmailMessage emailMessage = new EmailMessage();
         emailMessage.setRecipientEmail("invalid_email");
@@ -94,5 +96,46 @@ class EmailServiceIntegrationTest {
         // then
         verify(mailSender).send(any(SimpleMailMessage.class));
         assertEquals(MessageSendingStatus.ERROR, emailMessage.getStatus());
+    }
+
+    @Test
+    void resendFailedEmails_withMaxAttemptsReached_doesNotResendEmails() {
+        // given
+        EmailMessage failedEmail = new EmailMessage();
+        failedEmail.setId("100");
+        failedEmail.setRecipientEmail("test@example.com");
+        failedEmail.setSubject("Test Subject");
+        failedEmail.setContent("Test Content");
+        failedEmail.setStatus(MessageSendingStatus.ERROR);
+        failedEmail.setAttemptCount(4);
+
+        // when
+        emailService.resendFailedEmails();
+
+        // then
+        Optional<EmailMessage> optionalEmailMessage = emailMessageRepository.findById(failedEmail.getId());
+        assertTrue(optionalEmailMessage.isEmpty());
+    }
+
+    @Test
+    void resendFailedEmails_withFailedEmails_setsStatusToSent() {
+        // given
+        EmailMessage failedEmail = new EmailMessage();
+        failedEmail.setId("100");
+        failedEmail.setRecipientEmail("test@example.com");
+        failedEmail.setSubject("Test Subject");
+        failedEmail.setContent("Test Content");
+        failedEmail.setStatus(MessageSendingStatus.ERROR);
+        failedEmail.setAttemptCount(2);
+        emailMessageRepository.save(failedEmail);
+
+        // when
+        doNothing().when(mailSender).send(any(SimpleMailMessage.class));
+        emailService.resendFailedEmails();
+
+        // then
+        Optional<EmailMessage> optionalEmailMessage = emailMessageRepository.findById(failedEmail.getId());
+        assertTrue(optionalEmailMessage.isPresent());
+        assertEquals(MessageSendingStatus.SENT, optionalEmailMessage.get().getStatus());
     }
 }
