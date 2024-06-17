@@ -33,6 +33,8 @@ MAIL_USERNAME=your_mail_username
 MAIL_PASSWORD=your_mail_password
 MAIL_HOST=syour_mail_host
 MAIL_PORT=your_mail_port
+
+KAFKA_ADDRESS=your_url
 ```
 
 3) Build project
@@ -45,7 +47,7 @@ MAIL_PORT=your_mail_port
 
 This command will start the following services:
 
-- mailsender: The Spring Boot application (available at http://localhost:8092)
+- mail-sender: The Spring Boot application (available at http://localhost:8092)
 - elasticsearch: Elasticsearch database
 - kibana: Kibana for Elasticsearch (available at http://localhost:5601)
 - zookeeper: Apache ZooKeeper for Kafka

@@ -45,27 +45,5 @@ services:
     depends_on:
       - elasticsearch
 
-  email-sender:
-    container_name: email-sender
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - ./.env
-    ports:
-      - "8092:8092"
-    environment:
-      - elasticsearch.address=elasticsearch:9200
-      - KAFKA_ADDRESS=kafka:9092
-      - MAIL_HOST=${MAIL_HOST}
-      - MAIL_PORT=${MAIL_PORT}
-      - MAIL_USERNAME=${MAIL_USERNAME}
-      - MAIL_PASSWORD=${MAIL_PASSWORD}
-    depends_on:
-      kafka:
-        condition: service_healthy
-      elasticsearch:
-        condition: service_healthy
-
 volumes:
   db-data:

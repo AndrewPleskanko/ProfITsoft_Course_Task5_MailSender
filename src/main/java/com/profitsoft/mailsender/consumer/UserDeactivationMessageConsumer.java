@@ -4,7 +4,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.profitsoft.mailsender.entity.EmailMessage;
-import com.profitsoft.mailsender.services.EmailServiceImpl;
+import com.profitsoft.mailsender.services.inrerfaces.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserDeactivationMessageConsumer implements MessageConsumer<EmailMessage> {
 
-    private final EmailServiceImpl emailService;
+    private final EmailService emailService;
 
     /**
      * Consumes user deactivation messages from Kafka and attempts to send emails based on those messages.
